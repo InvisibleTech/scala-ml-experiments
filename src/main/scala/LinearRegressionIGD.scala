@@ -20,7 +20,17 @@ object LinearRegressionIGD {
 
   def y(m: Double, x: Double, b: Double): Double = m * x + b
 
+  def yError(m: Double, b: Double, p: Point): Double = p.y - y(m, p.x, b)
+
   def totalError(m: Double, b: Double, points: List[Point]): Double = {
-    Option(points.map(p => pow(p.y - y(m, p.x, b), 2)).foldLeft(0.0)(_ + _) / points.size).filter(!_.isNaN).getOrElse(0.0)
+    Option(points.map(p => pow(yError(m, b, p), 2)).foldLeft(0.0)(_ + _) / points.size).filter(!_.isNaN).getOrElse(0.0)
+  }
+
+  def applyGradient(m: Double, b: Double, points: List[Point], learningRate: Double): (Double, Double) ={
+    val derivativeC = -2.0/points.size
+    val gradient: (Double, Double) = points.map(p => (derivativeC*p.x*yError(m, b, p), derivativeC*yError(m, b, p)))
+                                .foldLeft((0.0, 0.0))((a, t) => {println((a, t));(a._1+t._1, a._2+t._2)})
+
+    (m - (learningRate * gradient._1), b - (learningRate * gradient._2))                            
   }
 }
