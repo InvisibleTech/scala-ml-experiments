@@ -7,7 +7,7 @@ import LinearRegressionIGD._
 class LinearRegressionGDSpec extends FunSpec {
   import org.scalactic._
   import TripleEquals._
-  implicit val doubleEquality = TolerantNumerics.tolerantDoubleEquality(0.000001)
+  implicit val doubleEquality = TolerantNumerics.tolerantDoubleEquality(0.001)
 
   describe("Error function for scoring candidate slope and intercept") {
     it("Should return 0.0 for empty lists of Points") {
@@ -61,6 +61,16 @@ class LinearRegressionGDSpec extends FunSpec {
 
       assert(1.9 === applyGradient(0.0, 0.0, l, 0.1)._1)
       assert(0.5 === applyGradient(0.0, 0.0, l, 0.1)._2)
+    }
+  }
+
+  describe("Optimized Fit should come close given a step size of 0.01 and 1500 iterations") {
+    it("Should come close") {
+      val l = List(Point(-3, -15), Point(1, 1), Point(5, 17), Point(8, 29), Point(12, 45))
+
+      val (m, b) = optimizedFit(l, 0.0, 0.0, 0.01, 1500)
+      assert(4.0 === m)
+      assert(-3.0 === b)
     }
   }
 }

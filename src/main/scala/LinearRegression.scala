@@ -48,7 +48,6 @@ object LinearRegression {
   def optimizedFit(points: List[Point]): (Double, Double) = {
     val n = points.size
     val meanFactorz = meanFactors(points)
-    println(meanFactorz.toString)
     val m = (meanFactorz.x * meanFactorz.y - n * meanFactorz.xy) / (meanFactorz.x * meanFactorz.x - n * meanFactorz.xsq)
     val b = (1.0 / n) * (meanFactorz.y - m * meanFactorz.x)
 
